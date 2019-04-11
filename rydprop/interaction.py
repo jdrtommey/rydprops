@@ -26,7 +26,7 @@ def interaction(space,int_type=None,parallel = True):
 
 def electric_interaction(space,parallel):
     """
-    electric field interaction
+    electric field interaction, in units of ea_0.
     """
     if parallel == True:
         selection_rules={'dl':1,'dml':0}
@@ -61,8 +61,11 @@ def electric_interaction(space,parallel):
     
 def magnetic_interaction(space,parallel):
     """
-    magnetic interaction, currently only works if para if True
+    magnetic interaction, currently only works if para if True.
+    returns in atomic units (e*hbar/m_e)
     """
+    
+    
     if parallel == False:
         raise ValueError("Only parallel magnetic fields supported at present")
         
@@ -73,7 +76,7 @@ def magnetic_interaction(space,parallel):
     for i,state in enumerate(space):
         row_list.append(i)
         col_list.append(i)
-        value_list.append(state.ml)
+        value_list.append(state.ml * 0.5)
         
     return coo_matrix((value_list,(row_list,col_list)),shape=(len(space), len(space)))
 

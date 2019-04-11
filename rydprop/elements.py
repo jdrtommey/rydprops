@@ -1,6 +1,7 @@
 from .atom import RydbergAtom
+from .state import default_basis
 
-def TripletHelium(basis = None):
+def TripletHelium(basis = default_basis):
     mass = 4.002602
     defects = dict({
 0 : {
