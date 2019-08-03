@@ -8,5 +8,5 @@ setup(
    author_email='ucapdrt[at]ucl[dot]ac[dot]uk',
    url="https://github.com/jdrtommey/rydprop",
    packages=find_packages(),  #same as name
-   install_requires=['numpy','scipy','numba','tqdm'], #external packages as dependencies
+   install_requires=['numpy','scipy','numba','tqdm','pint'], #external packages as dependencies
 )

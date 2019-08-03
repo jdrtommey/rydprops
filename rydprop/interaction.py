@@ -17,11 +17,11 @@ def interaction(space,int_type=None,parallel = True):
         raise TypeError("Interactions act on " +str(type(Space)) + "objects." )
     
     if int_type in interactions:
-        self.function = interactions[int_type]
+        function = interactions[int_type]
     else:
         raise KeyError("couldnt find the interaction asked for. Options are " + str(interactions.keys))
         
-    return self.function(space,parallel)
+    return function(space,parallel)
         
 
 def electric_interaction(space,parallel):
@@ -45,7 +45,7 @@ def electric_interaction(space,parallel):
             dl = abs(state1.l - state2.l)
             dml = abs(state1.ml-state2.ml)
             if dl == selection_rules['dl'] and dml ==selection_rules['dml']:
-                matrix_element = space.atom.matrix_element(state1.n,state1.l,state1.ml,state2.n,state2.l,state2.ml,parallel)
+                matrix_element = space.atom.matrix_element(state1,state2,parallel)
                 
                 row_list.append(row)
                 col_list.append(col)
@@ -80,6 +80,12 @@ def magnetic_interaction(space,parallel):
         
     return coo_matrix((value_list,(row_list,col_list)),shape=(len(space), len(space)))
 
+def oscillating_electric_interaction(space,parallel):
+    """
+    same as electric interaction except it has factor of 1/2 to account for time averaging
+    """
+    
+    return 0.5*electric_interaction(space,parallel)
 
-interactions = {'elec':electric_interaction,'mag':magnetic_interaction,'osc':electric_interaction}
+interactions = {'elec':electric_interaction,'mag':magnetic_interaction,'osc':oscillating_electric_interaction}
 

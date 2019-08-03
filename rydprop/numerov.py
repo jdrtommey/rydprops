@@ -130,7 +130,7 @@ def wf_overlap(r1, y1, r2, y2, p=1.0):
     """
     r1, y1, r2, y2 = wf_align(r1, y1, r2, y2)
     return np.sum(y1 * y2 * r1**(2.0 + p))
-@jit(cache=True)
+@jit
 def radial_overlap(n1, l1, n2, l2, p=1.0):
     """ Radial overlap for state n1, l1 and n2 l2.
     """

@@ -54,7 +54,7 @@ class Space:
         """
         energies = []
         for state in self.states:
-            energies.append(self.atom.energy(state.n,state.l,state.ml))
+            energies.append(self.atom.energy(state))
         
         return diags(energies,format='coo')
 

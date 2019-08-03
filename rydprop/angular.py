@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
-Functions to compute angular integrals
+Functions to compute angular integrals.
 """
 import sqlite3
 from numba import jit
+
 @jit
 def angular_overlap_analytical(L_1, L_2, M_1, M_2,para):
     """ 
@@ -45,3 +46,4 @@ def angular_overlap_analytical(L_1, L_2, M_1, M_2,para):
             elif dL == -1:
                 overlap = (-(0.5*(-1)**(-M+2*L)) * (((L+M-1)*(L+M))  /((2*L-1)*(2*L+1)))**0.5)
     return overlap
+
