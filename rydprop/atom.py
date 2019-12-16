@@ -67,7 +67,7 @@ class RydbergAtom:
         gets the energy of a state in units of H'_e, convert to the non-scaled version H_e.
         """
         neff = self.n_eff(state1)
-        return energy_au(neff) /self.scalefactor
+        return energy_au(neff) *self.scalefactor
    
     def radial_overlap(self,state1,state2,order=1.0):
         """

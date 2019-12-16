@@ -8,7 +8,8 @@ tools for the comparision with experimental peaks
 A vector of couplings <n,l,ml|er|groundstate> is passed into the function which sums up the eigenvector
 weightings and the transition moment. Take care passing in a Floquet space. 
 """
-
+from numba import jit
+import numpy as np
 
 def get_coupling_ground(space,groundstate,para):
     """
@@ -31,7 +32,7 @@ def get_coupling_ground(space,groundstate,para):
     """
     couplings= []
     for state in space:
-        lis.append(space.atom.matrix_element(groundstate,state,para))
+        couplings.append(space.atom.matrix_element(groundstate,state,para))
         
     return np.asarray(couplings)
 
