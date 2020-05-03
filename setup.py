@@ -2,7 +2,7 @@ from setuptools import setup,find_packages
 
 setup(
    name='ryd',
-   version='0.1(dev)',
+   version='0.1',
    description='Calculate properties of rydberg atoms and generate their hamiltonians in external fields',
    author='J.D.R Tommey',
    author_email='ucapdrt[at]ucl[dot]ac[dot]uk',
