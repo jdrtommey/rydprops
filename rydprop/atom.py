@@ -161,7 +161,7 @@ class RydbergAtom:
         return abs((field_strength *transition_dipole) / hbar)
 
     def get_radial_wf(self,state1):
-        neff = self.get_neff(state1)
+        neff = self.n_eff(state1)
         return wf(neff,state1.l,neff)
 
     def Lifetime(self,temp):
