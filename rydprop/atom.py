@@ -8,6 +8,8 @@ from .state import basis_options
 import scipy.constants as consts
 from numba import jit
 import numpy as np
+import functools
+from scipy import special as sp
 m_e = consts.physical_constants['electron mass'][0]
 R_0 = consts.physical_constants['Rydberg constant'][0]
 En_h =  consts.physical_constants['Hartree energy'][0]
@@ -164,10 +166,34 @@ class RydbergAtom:
         neff = self.n_eff(state1)
         return wf(neff,state1.l,neff)
 
-    def Lifetime(self,temp):
+    def get_angular_wf(self,state1):
         """
-        get the lifetime of a state in seconds at a given temperature.
+        returns the angualr wavefunction in phi and theta
         """
+        return get_angular_wf(state1.l,state1.ml)
+
+    def get_2d_wf(self,state1,frac_r_max = 1.0,num_points=100,):
+        """
+        returns x,y,z,wf values for a total wavefunction.
+        """
+
+        ### Gets the radial wavefunction numerically
+        radial_wf_x,radial_wf_y = self.get_radial_wf(state1)
+        #### Set up linear arrays for all coordinate directions
+        maximum_radial_extent = np.max(radial_wf_x)
+        x = 0.0
+        y_grid = np.linspace(-maximum_radial_extent*frac_r_max,maximum_radial_extent*frac_r_max,num_points)
+        z_grid = np.linspace(-maximum_radial_extent*frac_r_max,maximum_radial_extent*frac_r_max,num_points)
+        _y,_z = np.meshgrid(y_grid,z_grid)
+        #### Get the arrays in polar coorindates
+        theta_grid,phi_grid,r_grid = _cart2sph(x,_y,_z)
+        #### Get the radial part of wavefunction
+        r_wf_2d = np.array([list(map(functools.partial(
+        _find_nearest_rad_y, find_array_X = radial_wf_x, find_array_Y = radial_wf_y), i)) for i in r_grid])
+        sph_wf_2d = sp.sph_harm(state1.ml, state1.l, theta_grid, phi_grid)
+        return _y,_z,r_wf_2d,sph_wf_2d,r_grid
+
+
 
 
 # FUNCTIONS FOR USE BY ATOM CLASS
@@ -221,3 +247,23 @@ def get_radial_wf(neff,l):
         corresponding positions
     """
     return wf(neff,l,neff)
+
+import scipy.special as sp
+@jit
+def get_angular_wf(l,m):
+    """
+    function returns t
+    """
+    phi, theta = np.mgrid[0:2*np.pi:200j, 0:np.pi:100j] #arrays of angular variables
+    wavefunction= sp.sph_harm(m, l, phi, theta)
+    return phi,theta,wavefunction
+
+def _cart2sph(x, y, z):
+    hxy = np.hypot(x, y)
+    r = np.hypot(hxy, z)
+    el = np.arctan2(z, hxy) + np.pi/2.0
+    az = np.arctan2(y, x) + np.pi/2.0
+    return az, el, r
+def _find_nearest_rad_y(value, find_array_X, find_array_Y):
+    idx = (np.abs(find_array_X-value)).argmin()
+    return find_array_Y[idx]
